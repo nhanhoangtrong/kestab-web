@@ -1,0 +1,44 @@
+{
+  "name": "kestab-web",
+  "version": "0.1.0",
+  "description": "A static HTML builder uses gulp and browser-sync for development and production",
+  "main": "index.js",
+  "scripts": {
+    "dev": "gulp dev",
+    "build": "gulp build",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/siege250294/kestab-web.git"
+  },
+  "keywords": [
+    "html",
+    "static",
+    "web",
+    "gulp",
+    "browsersync",
+    "builder"
+  ],
+  "author": "siege250294",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/siege250294/kestab-web/issues"
+  },
+  "homepage": "https://github.com/siege250294/kestab-web#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-imagemin": "^3.1.1",
+    "gulp-stylus": "^2.6.0",
+    "gulp-uglify": "^2.1.0",
+    "gulp-useref": "^3.1.2",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^4.3.11",
+    "run-sequence": "^1.2.2",
+    "stylus": "^0.54.5"
+  }
+}

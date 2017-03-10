@@ -1,0 +1,9 @@
+html,
+body {
+  magin: 0;
+  padding: 0;
+  color: rgba(255,170,255,0.667);
+}
+* {
+  box-sizing: border-box;
+}
