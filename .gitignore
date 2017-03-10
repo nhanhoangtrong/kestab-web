@@ -1,0 +1,21 @@
+# NodeJS module folder
+/node_modules/
+
+# Build folder
+/dist/
+
+# MacOS file
+.DS_Store
+
+# Debug log from npm
+npm-debug.log
+
+# IntelliJ IDE ignore
+.idea
+
+# Visual Studio Code
+.vscode
+.history
+
+# Coverage directory used by tools like istanbul
+coverage
