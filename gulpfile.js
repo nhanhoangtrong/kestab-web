@@ -38,9 +38,10 @@ gulp.task('stylus', function() {
 })
 
 gulp.task('browserSync', function() {
+	const baseDir = process.env.NODE_ENV === 'production' ? './dist' : './src'
 	browserSync.init({
 		server: {
-			baseDir: './src'
+			baseDir: baseDir
 		}
 	})
 })
@@ -74,11 +75,15 @@ gulp.task('cssnano', function() {
 		.pipe(gulp.dest(dest.css))
 })
 
-gulp.task('dev', ['stylus', 'browserSync'], function() {
+gulp.task('watch', ['stylus', 'browserSync'], function() {
 	watch(src.styl, function(vinyl) {
 		gulp.start('stylus')
 	})
 	watch(src.html, browserSync.reload)
+})
+
+gulp.task('serve', function(cb) {
+	runSequence('build', 'browserSync', cb)
 })
 
 gulp.task('clean', function(cb) {
@@ -89,4 +94,12 @@ gulp.task('clean', function(cb) {
 
 gulp.task('build', function(cb) {
 	runSequence('clean', 'stylus', ['cssnano', 'uglify', 'htmlmin'], cb)
+})
+
+gulp.task('start', function(cb) {
+	if (process.env.NODE_ENV === 'production') {
+		gulp.start('serve')
+	} else {
+		gulp.start('watch')
+	}
 })

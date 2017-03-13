@@ -9,8 +9,9 @@ Kestah give you
 * some basic tasks using Gulp:
 	* `stylus` for styling CSS via [Stylus]
 	* `clean` for cleaning built folder
-	* `dev` for auto-reloading browser when developing
+	* `watch` for auto-reloading browser when developing
 	* `build` for building files
+	* `serve` for starting production server
 
 ## Usage
 
@@ -32,7 +33,13 @@ npm install --all
 ### Running
 
 ```
-npm run dev
+npm start
+```
+
+### Start developing
+
+```
+npm run watch
 ```
 
 ### Building for distribution
