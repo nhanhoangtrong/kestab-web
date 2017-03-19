@@ -6,7 +6,8 @@ const 	gulp = require('gulp'),
 		imagemin = require('gulp-imagemin'),
 		watch = require('gulp-watch'),
 		useref = require('gulp-useref'),
-		stylus = require('gulp-stylus')
+		stylus = require('gulp-stylus'),
+		hb = require('gulp-hb')
 
 const runSequence = require('run-sequence')
 const del = require('del')
@@ -15,15 +16,21 @@ const browserSync = require('browser-sync').create()
 const src = {
 	styl: './src/styl/**/*.styl',
 	css: './src/css/**/*.css',
-	html: './src/**/*.html',
-	js: './src/js/**/*.js'
+	html: './src/templates/*.html',
+	js: './src/js/**/*.js',
+	partials: './src/templates/partials/*.hbs',
+	data: './src/templates/data/*.{json,js}'
 }
 
 const dest = {
 	styl: './src/css',
+	html: './src'
+}
+
+const dist = {
 	css: './dist/css',
 	js: './dist/js',
-	html: './dist'
+	html: './dist/'
 }
 
 gulp.task('stylus', function() {
@@ -34,6 +41,18 @@ gulp.task('stylus', function() {
 		})).pipe(gulp.dest(dest.styl))
 		.pipe(browserSync.stream({
 			once: true
+		}))
+})
+
+gulp.task('handlebars', function() {
+	return gulp.src(src.html)
+		.pipe(hb({
+			partials: src.partials,
+			data: src.data
+		}))
+		.pipe(gulp.dest(dest.html))
+		.pipe(browserSync.reload({
+			stream: true
 		}))
 })
 
@@ -54,7 +73,7 @@ gulp.task('htmlmin', function() {
 			gutil.log('[htmlmin-error]', err.message)
 			this.emit('end')
 		}))
-		.pipe(gulp.dest(dest.html))
+		.pipe(gulp.dest(dist.html))
 })
 
 gulp.task('uglify', function() {
@@ -63,7 +82,7 @@ gulp.task('uglify', function() {
 			gutil.log('[uglify-error]', err.message)
 			this.emit('end')
 		}))
-		.pipe(gulp.dest(dest.js))
+		.pipe(gulp.dest(dist.js))
 })
 
 gulp.task('cssnano', function() {
@@ -72,14 +91,16 @@ gulp.task('cssnano', function() {
 			gutil.log('[cssnano-error]', err.message)
 			this.emit('end')
 		}))
-		.pipe(gulp.dest(dest.css))
+		.pipe(gulp.dest(dist.css))
 })
 
-gulp.task('watch', ['stylus', 'browserSync'], function() {
+gulp.task('watch', ['stylus', 'browserSync', 'handlebars'], function() {
 	watch(src.styl, function(vinyl) {
 		gulp.start('stylus')
 	})
-	watch(src.html, browserSync.reload)
+	watch(src.html, function(vinyl) {
+		gulp.start('handlebars')
+	})
 })
 
 gulp.task('serve', function(cb) {
@@ -93,7 +114,7 @@ gulp.task('clean', function(cb) {
 })
 
 gulp.task('build', function(cb) {
-	runSequence('clean', 'stylus', ['cssnano', 'uglify', 'htmlmin'], cb)
+	runSequence('clean', ['stylus', 'handlebars'], ['cssnano', 'uglify', 'htmlmin'], cb)
 })
 
 gulp.task('start', function(cb) {
