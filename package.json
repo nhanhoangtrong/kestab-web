@@ -4,8 +4,8 @@
   "description": "A static HTML builder uses gulp and browser-sync for development and production",
   "main": "index.js",
   "scripts": {
-    "start": "set NODE_ENV=production && gulp start",
-    "watch": "set NODE_ENV=development && gulp start",
+    "start": "NODE_ENV=production gulp start",
+    "watch": "NODE_ENV=development gulp start",
     "build": "NODE_ENV=production gulp build",
     "test": "mocha"
   },
