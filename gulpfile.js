@@ -18,6 +18,7 @@ const src = {
 	styl: './src/styl/**/*.styl',
 	css: './src/css/**/*.css',
 	img: './src/img/**/*',
+	html: './src/**/*.html',
 	hbs: './src/templates/**/*.hbs',
 	js: './src/js/**/*.js',
 	layouts: './src/templates/*.hbs',
