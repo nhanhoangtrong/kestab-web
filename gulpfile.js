@@ -7,7 +7,8 @@ const 	gulp = require('gulp'),
 		watch = require('gulp-watch'),
 		useref = require('gulp-useref'),
 		stylus = require('gulp-stylus'),
-		hb = require('gulp-hb')
+		hb = require('gulp-hb'),
+		rename = require('gulp-rename')
 
 const runSequence = require('run-sequence')
 const del = require('del')
@@ -16,10 +17,13 @@ const browserSync = require('browser-sync').create()
 const src = {
 	styl: './src/styl/**/*.styl',
 	css: './src/css/**/*.css',
-	html: './src/templates/*.html',
+	img: './src/img/**/*',
+	hbs: './src/templates/**/*.hbs',
 	js: './src/js/**/*.js',
+	layouts: './src/templates/*.hbs',
 	partials: './src/templates/partials/*.hbs',
-	data: './src/templates/data/*.{json,js}'
+	data: './src/templates/data/*.{json,js}',
+	helpers: './src/templates/helpers/*.js'
 }
 
 const dest = {
@@ -30,7 +34,8 @@ const dest = {
 const dist = {
 	css: './dist/css',
 	js: './dist/js',
-	html: './dist/'
+	html: './dist/',
+	img: './dist/img'
 }
 
 gulp.task('stylus', function() {
@@ -45,10 +50,14 @@ gulp.task('stylus', function() {
 })
 
 gulp.task('handlebars', function() {
-	return gulp.src(src.html)
+	return gulp.src(src.layouts)
 		.pipe(hb({
 			partials: src.partials,
-			data: src.data
+			data: src.data,
+			helpers: src.helpers
+		}))
+		.pipe(rename(function(path) {
+			path.extname = '.html'
 		}))
 		.pipe(gulp.dest(dest.html))
 		.pipe(browserSync.reload({
@@ -94,6 +103,14 @@ gulp.task('cssnano', function() {
 		.pipe(gulp.dest(dist.css))
 })
 
+gulp.task('imagemin', function() {
+	return gulp.src(src.img)
+		.pipe(imagemin().on('error', function(err) {
+			gutil.log('[imagemin-error', err.message)
+			this.emit('end')
+		}))
+})
+
 gulp.task('watch', ['stylus', 'browserSync', 'handlebars'], function() {
 	watch(src.styl, function(vinyl) {
 		gulp.start('stylus')
@@ -101,6 +118,8 @@ gulp.task('watch', ['stylus', 'browserSync', 'handlebars'], function() {
 	watch(src.html, function(vinyl) {
 		gulp.start('handlebars')
 	})
+	watch(src.js, browserSync.reload)
+	watch(src.img, browserSync.reload)
 })
 
 gulp.task('serve', function(cb) {
