@@ -10,6 +10,13 @@ const 	gulp = require('gulp'),
 		hb = require('gulp-hb'),
 		rename = require('gulp-rename')
 
+const logPluginError = function(pluginName) {
+	return function(error) {
+		gutil.log(pluginName, error.message)
+		this.emit('end')
+	}
+}
+
 const runSequence = require('run-sequence')
 const del = require('del')
 const browserSync = require('browser-sync').create()
@@ -21,6 +28,7 @@ const src = {
 	html: './src/**/*.html',
 	hbs: './src/templates/**/*.hbs',
 	js: './src/js/**/*.js',
+	templates: './src/templates/**/*',
 	layouts: './src/templates/*.hbs',
 	partials: './src/templates/partials/*.hbs',
 	data: './src/templates/data/*.{json,js}',
@@ -41,10 +49,8 @@ const dist = {
 
 gulp.task('stylus', function() {
 	return gulp.src(src.styl)
-		.pipe(stylus().on('error', function(err) {
-			gutil.log('[stylus-error]', err.message)
-			this.emit('end')
-		})).pipe(gulp.dest(dest.styl))
+		.pipe(stylus().on('error', logPluginError('stylus')))
+		.pipe(gulp.dest(dest.styl))
 		.pipe(browserSync.stream({
 			once: true
 		}))
@@ -56,10 +62,7 @@ gulp.task('handlebars', function() {
 			partials: src.partials,
 			data: src.data,
 			helpers: src.helpers
-		}).on('error', function(err) {
-			gutil.log('[handlebars-error]', err.message)
-			this.emit('end')
-		}))
+		}).on('error', logPluginError('handlebars')))
 		.pipe(rename(function(path) {
 			path.extname = '.html'
 		}))
@@ -82,37 +85,25 @@ gulp.task('htmlmin', function() {
 	return gulp.src(src.html)
 		.pipe(htmlmin({
 			collapseWhitespace: true
-		}).on('error', function(err) {
-			gutil.log('[htmlmin-error]', err.message)
-			this.emit('end')
-		}))
+		}).on('error', logPluginError('htmlmin')))
 		.pipe(gulp.dest(dist.html))
 })
 
 gulp.task('uglify', function() {
 	return gulp.src(src.js)
-		.pipe(uglify().on('error', function(err) {
-			gutil.log('[uglify-error]', err.message)
-			this.emit('end')
-		}))
+		.pipe(uglify().on('error', logPluginError('uglify')))
 		.pipe(gulp.dest(dist.js))
 })
 
 gulp.task('cssnano', function() {
 	return gulp.src(src.css)
-		.pipe(cssnano().on('error', function(err) {
-			gutil.log('[cssnano-error]', err.message)
-			this.emit('end')
-		}))
+		.pipe(cssnano().on('error', logPluginError('cssnano')))
 		.pipe(gulp.dest(dist.css))
 })
 
 gulp.task('imagemin', function() {
 	return gulp.src(src.img)
-		.pipe(imagemin().on('error', function(err) {
-			gutil.log('[imagemin-error', err.message)
-			this.emit('end')
-		}))
+		.pipe(imagemin().on('error', logPluginError('imagemin')))
 		.pipe(gulp.dest(dist.img))
 })
 
@@ -120,7 +111,7 @@ gulp.task('watch', ['stylus', 'browserSync', 'handlebars'], function() {
 	watch(src.styl, function(vinyl) {
 		gulp.start('stylus')
 	})
-	watch(src.hbs, function(vinyl) {
+	watch(src.templates, function(vinyl) {
 		gulp.start('handlebars')
 	})
 	watch(src.js, browserSync.reload)
