@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-	Hello world<br />
+	Hello world<br />{{#ifeq data.number 1}}<h1>True</h1>{{else}}<h2>False</h2>{{/ifeq}}
 	title: {{data.title}}<br />
 	body: {{data.body}}<br />
 	this is a partial: {{> partone }}
