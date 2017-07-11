@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Kestab HTML website</title>
-	<!-- build:css css/combined.css -->
-	<link rel="stylesheet" href="/css/main.css">
-	<!-- endbuild -->
-</head>
-<body>
-	Hello world<br />{{#ifeq data.number 1}}<h1>True</h1>{{else}}<h2>False</h2>{{/ifeq}}
-	title: {{data.title}}<br />
-	body: {{data.body}}<br />
-	this is a partial: {{> partone }}
-	this is another partial: {{> parttwo part="two"}}
-	this is a sample image: <img src="img/sample.png">
+{{#extend "base"}}
+	{{#content "title"}}
+		Index title
+	{{/content}}
 
-	<!-- build:js scripts/combined.js -->
-	<script src="/js/main.js" type="text/javascript" charset="utf-8"></script>
-	<!-- endbuild -->
-</body>
-</html>
+	{{#content "body"}}
+		Hello world<br />{{#ifeq data.number 1}}<h1>True</h1>{{else}}<h2>False</h2>{{/ifeq}}
+		title: {{data.title}}<br />
+		body: {{data.body}}<br />
+		this is a partial: {{> partone }}
+		this is another partial: {{> parttwo part="two"}}
+		this is a sample image:
+	{{/content}}
+{{/extend}}

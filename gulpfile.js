@@ -29,8 +29,9 @@ const src = {
 	html: './src/**/*.html',
 	hbs: './src/templates/**/*.hbs',
 	js: './src/js/**/*.js',
-	templates: './src/templates/**/*',
-	layouts: './src/templates/*.hbs',
+	templatesDir: './src/templates/**/*',
+	templates: './src/templates/{,posts/}*.hbs',
+	layouts: './src/templates/layouts/*.hbs',
 	partials: './src/templates/partials/*.hbs',
 	data: './src/templates/data/*.{json,js}',
 	helpers: './src/templates/helpers/*.js',
@@ -58,12 +59,16 @@ gulp.task('stylus', function() {
 });
 
 gulp.task('handlebars', function() {
-	return gulp.src(src.layouts)
-		.pipe(hb({
-			partials: src.partials,
-			data: src.data,
-			helpers: src.helpers,
-		}).on('error', logPluginError('handlebars')))
+	var hbStream = hb()
+		.partials(src.layouts)
+		.partials(src.partials)
+		.helpers(require('handlebars-layouts'))
+		.helpers(src.helpers)
+		.data(src.data)
+		.on('error', logPluginError('handlebars'));
+
+	return gulp.src(src.templates)
+		.pipe(hbStream)
 		.pipe(rename(function(path) {
 			path.extname = '.html';
 		}))
@@ -113,7 +118,7 @@ gulp.task('watch', ['stylus', 'browserSync', 'handlebars'], function() {
 	watch(src.styl, function(vinyl) {
 		gulp.start('stylus');
 	});
-	watch(src.templates, function(vinyl) {
+	watch(src.templatesDir, function(vinyl) {
 		gulp.start('handlebars');
 	});
 	watch(src.js, browserSync.reload);

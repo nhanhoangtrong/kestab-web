@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{#block "head"}}
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{#block "title"}}Kestab HTML website{{/block}}</title>
+	<!-- build:css css/combined.css -->
+	<link rel="stylesheet" href="/css/main.css">
+    {{/block}}
+	<!-- endbuild -->
+</head>
+<body>
+	{{#block "body"}}
+    {{/block}}
+
+	<!-- build:js scripts/combined.js -->
+    {{#block "scripts"}}
+	<script src="/js/main.js" type="text/javascript" charset="utf-8"></script>
+    {{/block}}
+	<!-- endbuild -->
+</body>
+</html>

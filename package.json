@@ -42,6 +42,7 @@
     "gulp-useref": "^3.1.2",
     "gulp-util": "^3.0.8",
     "gulp-watch": "^4.3.11",
+    "handlebars-layouts": "^3.1.4",
     "run-sequence": "^1.2.2",
     "stylus": "^0.54.5"
   }
