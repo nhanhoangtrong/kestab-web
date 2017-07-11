@@ -84,6 +84,7 @@ gulp.task('browserSync', function() {
 
 gulp.task('htmlmin', function() {
 	return gulp.src(src.html)
+		.pipe(useref())
 		.pipe(htmlmin({
 			collapseWhitespace: true
 		}).on('error', logPluginError('htmlmin')))
