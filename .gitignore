@@ -4,6 +4,9 @@
 # Build folder
 /dist/
 
+# Built HTML files
+/src/**/*.html
+
 # MacOS file
 .DS_Store
 
