@@ -8,7 +8,8 @@ const 	gulp = require('gulp'),
 		useref = require('gulp-useref'),
 		stylus = require('gulp-stylus'),
 		hb = require('gulp-hb'),
-		rename = require('gulp-rename')
+		rename = require('gulp-rename'),
+		replace = require('gulp-replace')
 
 const logPluginError = function(pluginName) {
 	return function(error) {
