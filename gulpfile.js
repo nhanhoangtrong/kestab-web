@@ -9,7 +9,8 @@ const 	gulp = require('gulp'),
 		stylus = require('gulp-stylus'),
 		hb = require('gulp-hb'),
 		rename = require('gulp-rename'),
-		replace = require('gulp-replace');
+		sass = require('gulp-sass'),
+		sourcemaps = require('gulp-sourcemaps');
 
 const logPluginError = function(pluginName) {
 	return function(error) {
@@ -24,6 +25,7 @@ const browserSync = require('browser-sync').create();
 
 const src = {
 	styl: './src/styl/**/*.styl',
+	sass: './src/sass/**/*.scss',
 	css: './src/css/**/*.css',
 	img: './src/img/**/*',
 	html: './src/**/*.html',
@@ -38,7 +40,8 @@ const src = {
 };
 
 const dest = {
-	styl: './src/css',
+	styl: './src/css/styl',
+	sass: './src/css/sass',
 	html: './src',
 };
 
@@ -51,15 +54,28 @@ const dist = {
 
 gulp.task('stylus', function() {
 	return gulp.src(src.styl)
+		.pipe(sourcemaps.init())
 		.pipe(stylus().on('error', logPluginError('stylus')))
 		.pipe(gulp.dest(dest.styl))
+		.pipe(sourcemaps.write())
+		.pipe(browserSync.stream({
+			once: true,
+		}));
+});
+
+gulp.task('sass', function() {
+	return gulp.src(src.sass)
+		.pipe(sourcemaps.init())
+		.pipe(sass().on('error', logPluginError('sass')))
+		.pipe(gulp.dest(dest.sass))
+		.pipe(sourcemaps.write())
 		.pipe(browserSync.stream({
 			once: true,
 		}));
 });
 
 gulp.task('handlebars', function() {
-	var hbStream = hb()
+	var hbsStream = hb()
 		.partials(src.layouts)
 		.partials(src.partials)
 		.helpers(require('handlebars-layouts'))
@@ -68,7 +84,7 @@ gulp.task('handlebars', function() {
 		.on('error', logPluginError('handlebars'));
 
 	return gulp.src(src.templates)
-		.pipe(hbStream)
+		.pipe(hbsStream)
 		.pipe(rename(function(path) {
 			path.extname = '.html';
 		}))
@@ -84,6 +100,12 @@ gulp.task('browserSync', function() {
 		server: {
 			baseDir: baseDir,
 		},
+		serveStatic: [
+			{
+				route: '/node_modules',
+				dir: 'node_modules',
+			},
+		],
 	});
 });
 
@@ -114,9 +136,12 @@ gulp.task('imagemin', function() {
 		.pipe(gulp.dest(dist.img));
 });
 
-gulp.task('watch', ['stylus', 'browserSync', 'handlebars'], function() {
+gulp.task('watch', ['sass', 'stylus', 'browserSync', 'handlebars'], function() {
 	watch(src.styl, function(vinyl) {
 		gulp.start('stylus');
+	});
+	watch(src.sass, function (vinyl) {
+		gulp.start('sass');
 	});
 	watch(src.templatesDir, function(vinyl) {
 		gulp.start('handlebars');
