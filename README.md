@@ -5,13 +5,15 @@ A simple static website generator using Gulp for running tasks and Browser Sync 
 ## About
 
 Kestah give you
+
 * a basic skeleton for developing a static HTML5, CSS3 and Javascript only website
 * some basic tasks using Gulp:
-	* `stylus` for styling CSS via [Stylus]
-	* `clean` for cleaning built folder
-	* `watch` for auto-reloading browser when developing
-	* `build` for building files
-	* `serve` for starting production server
+  _ `stylus` for styling CSS via [Stylus]
+  _ `sass` for styling CSS via [Sass]
+  _ `clean` for cleaning built folder
+  _ `dev` for auto-reloading browser in development
+  _ `build` for building files
+  _ `serve` for starting production server
 
 ## Usage
 
@@ -27,10 +29,11 @@ Kestah give you
 ```
 git clone https://github.com/siege250294/kestab-web.git`
 cd kestah-web
-npm install --all
+npm install
+npm run dev
 ```
 
-### Running
+### Running build and start a production server
 
 ```
 npm start
@@ -39,7 +42,7 @@ npm start
 ### Start developing
 
 ```
-npm run watch
+npm run dev
 ```
 
 ### Building for distribution
@@ -72,7 +75,11 @@ Images should be placed in this folder for minifying before distribution.
 
 ### `./styl`
 
-This folder contains all the Stylus files. When saving, the `.styl` files will be converted to `.css` files and put into `./css` folder in appropriate name.
+This folder contains all the Stylus files. When saving, the `.styl` files will be converted to `.css` files and put into `./css/styl` folder in appropriate name.
+
+### `./sass`
+
+All the Sass files that will build into `./css/sass` folder.
 
 ## License
 
@@ -86,5 +93,6 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[Stylus]: http://stylus-lang.com/
-[Nhan Hoang]: http://nhanhoang.com
+[stylus]: http://stylus-lang.com/
+[sass]: http://sass-lang.com/
+[nhan hoang]: http://nhanhoang.com

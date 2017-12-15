@@ -7,9 +7,6 @@
 # Built HTML files
 /src/**/*.html
 
-# Built CSS files
-/src/css/**/*.css
-
 # MacOS file
 .DS_Store
 
