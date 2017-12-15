@@ -1,12 +1,13 @@
-# Kestah Website Builder
+# KESTAB Template Builder
 
-A simple static website generator using Gulp for running tasks and Browser Sync for browser reloading on development state.
+A simple static website generator best suit for developing templates using Gulp for running tasks and Browser Sync for browser reloading on development state.
 
 ## About
 
-Kestah give you
+KESTAB give you
 
 * a basic skeleton for developing a static HTML5, CSS3 and Javascript only website
+* `handlebars` templating with data generate, helpers and layouts
 * some basic tasks using Gulp:
   _ `stylus` for styling CSS via [Stylus]
   _ `sass` for styling CSS via [Sass]
