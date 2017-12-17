@@ -1,0 +1,29 @@
+{
+  "printWidth": 80,
+  "tabWidth": 4,
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "useTabs": false,
+  "bracketSpacing": true,
+  "jsxBracketSameLine": true,
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": "*.hbs",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.json",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": ".prettierrc",
+      "options": { "parser": "json", "tabWidth": 2 }
+    }
+  ]
+}
