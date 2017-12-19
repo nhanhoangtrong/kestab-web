@@ -12,16 +12,20 @@ const gulp = require('gulp'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps');
 
-const logPluginError = function(pluginName) {
-    return function(error) {
-        gutil.log(pluginName, error.message);
-        this.emit('end');
-    };
-};
-
 const runSequence = require('run-sequence');
 const del = require('del');
 const browserSync = require('browser-sync').create();
+
+function logPluginError(pluginName) {
+    return function (error) {
+        // When plugin error occured
+        // logging error stack via gutil
+        gutil.log(pluginName, error.stack);
+        // and send notify to browser
+        browserSync.notify(error.stack, 10000);
+        this.emit('end');
+    };
+}
 
 const src = {
     styl: './src/styl/**/*.styl',
@@ -52,7 +56,7 @@ const dist = {
     img: './dist/img',
 };
 
-gulp.task('stylus', function() {
+gulp.task('stylus', function () {
     return gulp
         .src(src.styl)
         .pipe(sourcemaps.init())
@@ -66,7 +70,7 @@ gulp.task('stylus', function() {
         );
 });
 
-gulp.task('sass', function() {
+gulp.task('sass', function () {
     return gulp
         .src(src.sass)
         .pipe(sourcemaps.init())
@@ -80,7 +84,7 @@ gulp.task('sass', function() {
         );
 });
 
-gulp.task('handlebars', function() {
+gulp.task('handlebars', function () {
     var hbsStream = hb()
         .partials(src.layouts)
         .partials(src.partials)
@@ -93,7 +97,7 @@ gulp.task('handlebars', function() {
         .src(src.templates)
         .pipe(hbsStream)
         .pipe(
-            rename(function(path) {
+            rename(function (path) {
                 path.extname = '.html';
             })
         )
@@ -105,22 +109,20 @@ gulp.task('handlebars', function() {
         );
 });
 
-gulp.task('browserSync', function() {
+gulp.task('browserSync', function () {
     const baseDir = process.env.NODE_ENV === 'production' ? './dist' : './src';
     browserSync.init({
         server: {
             baseDir: baseDir,
         },
-        serveStatic: [
-            {
-                route: '/node_modules',
-                dir: 'node_modules',
-            },
-        ],
+        serveStatic: [{
+            route: '/node_modules',
+            dir: 'node_modules',
+        }, ],
     });
 });
 
-gulp.task('htmlmin', function() {
+gulp.task('htmlmin', function () {
     return gulp
         .src(src.html)
         .pipe(useref())
@@ -132,61 +134,59 @@ gulp.task('htmlmin', function() {
         .pipe(gulp.dest(dist.html));
 });
 
-gulp.task('uglify', function() {
+gulp.task('uglify', function () {
     return gulp
         .src(src.js)
         .pipe(uglify().on('error', logPluginError('uglify')))
         .pipe(gulp.dest(dist.js));
 });
 
-gulp.task('cssnano', function() {
+gulp.task('cssnano', function () {
     return gulp
         .src(src.css)
         .pipe(cssnano().on('error', logPluginError('cssnano')))
         .pipe(gulp.dest(dist.css));
 });
 
-gulp.task('imagemin', function() {
+gulp.task('imagemin', function () {
     return gulp
         .src(src.img)
         .pipe(imagemin().on('error', logPluginError('imagemin')))
         .pipe(gulp.dest(dist.img));
 });
 
-gulp.task('watch', ['sass', 'stylus', 'browserSync', 'handlebars'], function() {
-    watch(src.styl, function(vinyl) {
+gulp.task('watch', ['sass', 'stylus', 'browserSync', 'handlebars'], function () {
+    watch(src.styl, function (vinyl) {
         gulp.start('stylus');
     });
-    watch(src.sass, function(vinyl) {
+    watch(src.sass, function (vinyl) {
         gulp.start('sass');
     });
-    watch(src.templatesDir, function(vinyl) {
+    watch(src.templatesDir, function (vinyl) {
         gulp.start('handlebars');
     });
     watch(src.js, browserSync.reload);
     watch(src.img, browserSync.reload);
 });
 
-gulp.task('serve', function(cb) {
+gulp.task('serve', function (cb) {
     runSequence('build', 'browserSync', cb);
 });
 
-gulp.task('clean', function(cb) {
-    del('./dist').then(function() {
+gulp.task('clean', function (cb) {
+    del('./dist').then(function () {
         cb();
     });
 });
 
-gulp.task('build', function(cb) {
+gulp.task('build', function (cb) {
     runSequence(
-        'clean',
-        ['stylus', 'handlebars'],
-        ['cssnano', 'uglify', 'htmlmin', 'imagemin'],
+        'clean', ['stylus', 'handlebars'], ['cssnano', 'uglify', 'htmlmin', 'imagemin'],
         cb
     );
 });
 
-gulp.task('start', function(cb) {
+gulp.task('start', function (cb) {
     if (process.env.NODE_ENV === 'production') {
         gulp.start('serve');
     } else {
