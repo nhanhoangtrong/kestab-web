@@ -79,7 +79,7 @@ gulp.task('sass', function () {
         .pipe(gulp.dest(dest.sass))
         .pipe(
             browserSync.stream({
-                once: true,
+                once: false, // inject many .css
             })
         );
 });
