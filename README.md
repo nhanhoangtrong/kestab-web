@@ -1,29 +1,29 @@
 # KESTAB Template Builder
 
-A simple static website generator best suit for developing templates using Gulp for running tasks and Browser Sync for browser reloading on development state.
+A simple static website generator best suit for developing templates using Handlebars templates, Gulp for running tasks and Browser Sync for browser reloading on development state.
 
 ## About
 
 KESTAB give you
 
-* a basic skeleton for developing a static HTML5, CSS3 and Javascript only website
-* `handlebars` templating with data generate, helpers and layouts
-* some basic tasks using Gulp:
-  _ `stylus` for styling CSS via [Stylus]
-  _ `sass` for styling CSS via [Sass]
-  _ `clean` for cleaning built folder
-  _ `dev` for auto-reloading browser in development
-  _ `build` for building files
-  _ `serve` for starting production server
+*   a basic skeleton for developing a static HTML5, CSS3 and Javascript only website
+*   `handlebars` templating with data generate, helpers and layouts
+*   some basic tasks using Gulp:
+    _ `stylus` for styling CSS via [Stylus]
+    _ `sass` for styling CSS via [Sass]
+    _ `clean` for cleaning built folder
+    _ `dev` for auto-reloading browser in development
+    _ `build` for building files
+    _ `serve` for starting production server
 
 ## Usage
 
 ### Prerequisites
 
-* `NodeJS` >= 6
-* `npm`
-* `gulp` >= 3
-* `browser-sync` >= 2
+*   `NodeJS` >= 6
+*   `npm`
+*   `gulp` >= 3
+*   `browser-sync` >= 2
 
 ### Installation
 
