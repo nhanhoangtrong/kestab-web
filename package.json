@@ -1,8 +1,7 @@
 {
   "name": "kestab-web",
   "version": "0.0.0",
-  "description":
-    "A static HTML builder ultilizes Gulp, Handlebars and Browser Sync for development",
+  "description": "A static HTML builder ultilizes Gulp, Handlebars and Browser Sync for development",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production gulp start",
@@ -13,7 +12,14 @@
     "type": "git",
     "url": "git+https://github.com/nhanhoangtrong/kestab-web.git"
   },
-  "keywords": ["html", "static", "web", "gulp", "browsersync", "builder"],
+  "keywords": [
+    "html",
+    "static",
+    "web",
+    "gulp",
+    "browsersync",
+    "builder"
+  ],
   "author": "nhanhoangtrong",
   "license": "MIT",
   "bugs": {
@@ -30,6 +36,7 @@
     "gulp": "^3.9.1",
     "gulp-cssnano": "^2.1.2",
     "gulp-hb": "^7.0.1",
+    "gulp-html-replace": "^1.6.2",
     "gulp-htmlmin": "^4.0.0",
     "gulp-imagemin": "^4.0.0",
     "gulp-rename": "^1.2.2",

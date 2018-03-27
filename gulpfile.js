@@ -10,7 +10,8 @@ const gulp = require('gulp'),
     hb = require('gulp-hb'),
     rename = require('gulp-rename'),
     sass = require('gulp-sass'),
-    sourcemaps = require('gulp-sourcemaps');
+    sourcemaps = require('gulp-sourcemaps'),
+    htmlReplace = require('gulp-html-replace');
 
 const runSequence = require('run-sequence');
 const del = require('del');
@@ -125,8 +126,10 @@ gulp.task('browserSync', function() {
 });
 
 gulp.task('htmlmin', function() {
+    const replaceTasks = Object.assign({}, require('./cdnmap.json'));
     return gulp
         .src(src.html)
+        .pipe(htmlReplace(replaceTasks))
         .pipe(useref())
         .pipe(
             htmlmin({
