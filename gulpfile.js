@@ -13,7 +13,6 @@ const gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     htmlReplace = require('gulp-html-replace');
 
-const runSequence = require('run-sequence');
 const del = require('del');
 const browserSync = require('browser-sync').create();
 
@@ -57,7 +56,7 @@ const dist = {
     img: './dist/img',
 };
 
-gulp.task('stylus', function() {
+function stylusTask() {
     return gulp
         .src(src.styl)
         .pipe(sourcemaps.init())
@@ -69,9 +68,9 @@ gulp.task('stylus', function() {
                 once: true,
             })
         );
-});
+}
 
-gulp.task('sass', function() {
+function sassTask() {
     return gulp
         .src(src.sass)
         .pipe(sourcemaps.init())
@@ -83,9 +82,9 @@ gulp.task('sass', function() {
                 once: false, // inject many .css
             })
         );
-});
+}
 
-gulp.task('handlebars', function() {
+function handlebarsTask() {
     var hbsStream = hb()
         .partials(src.layouts)
         .partials(src.partials)
@@ -108,9 +107,9 @@ gulp.task('handlebars', function() {
                 stream: true,
             })
         );
-});
+}
 
-gulp.task('browserSync', function() {
+function browserSyncTask() {
     const baseDir = process.env.NODE_ENV === 'production' ? './dist' : './src';
     browserSync.init({
         server: {
@@ -123,9 +122,9 @@ gulp.task('browserSync', function() {
             },
         ],
     });
-});
+}
 
-gulp.task('htmlmin', function() {
+function htmlminTask() {
     const replaceTasks = Object.assign({}, require('./cdnmap.json'));
     return gulp
         .src(src.html)
@@ -137,66 +136,51 @@ gulp.task('htmlmin', function() {
             }).on('error', logPluginError('htmlmin'))
         )
         .pipe(gulp.dest(dist.html));
-});
+}
 
-gulp.task('uglify', function() {
+function uglifyTask() {
     return gulp
         .src(src.js)
         .pipe(uglify().on('error', logPluginError('uglify')))
         .pipe(gulp.dest(dist.js));
-});
+}
 
-gulp.task('cssnano', function() {
+function cssnanoTask() {
     return gulp
         .src(src.css)
         .pipe(cssnano().on('error', logPluginError('cssnano')))
         .pipe(gulp.dest(dist.css));
-});
+}
 
-gulp.task('imagemin', function() {
+function imageminTask() {
     return gulp
         .src(src.img)
         .pipe(imagemin().on('error', logPluginError('imagemin')))
         .pipe(gulp.dest(dist.img));
+}
+
+function cleanTask() {
+    return del('./dist');
+}
+
+const watchDevTask = (exports.watch = function watchDevTask() {
+    gulp.watch(src.styl, stylusTask);
+    gulp.watch(src.sass, sassTask);
+    gulp.watch(src.templatesDir, handlebarsTask);
+    gulp.watch(src.js, browserSync.reload);
+    gulp.watch(src.img, browserSync.reload);
 });
 
-gulp.task('watch', ['sass', 'stylus', 'browserSync', 'handlebars'], function() {
-    watch(src.styl, function(vinyl) {
-        gulp.start('stylus');
-    });
-    watch(src.sass, function(vinyl) {
-        gulp.start('sass');
-    });
-    watch(src.templatesDir, function(vinyl) {
-        gulp.start('handlebars');
-    });
-    watch(src.js, browserSync.reload);
-    watch(src.img, browserSync.reload);
-});
+const build = (exports.build = gulp.series(
+    cleanTask,
+    gulp.parallel(stylusTask, handlebarsTask, sassTask),
+    gulp.parallel(cssnanoTask, uglifyTask, imageminTask),
+    htmlminTask
+));
 
-gulp.task('serve', function(cb) {
-    runSequence('build', 'browserSync', cb);
-});
+const serve = (exports.serve = gulp.series(build, browserSyncTask));
 
-gulp.task('clean', function(cb) {
-    del('./dist').then(function() {
-        cb();
-    });
-});
-
-gulp.task('build', function(cb) {
-    runSequence(
-        'clean',
-        ['stylus', 'handlebars'],
-        ['cssnano', 'uglify', 'htmlmin', 'imagemin'],
-        cb
-    );
-});
-
-gulp.task('start', function(cb) {
-    if (process.env.NODE_ENV === 'production') {
-        gulp.start('serve');
-    } else {
-        gulp.start('watch');
-    }
-});
+exports.start =
+    process.env.NODE_ENV === 'production'
+        ? serve
+        : gulp.parallel(watchDevTask, browserSyncTask);
