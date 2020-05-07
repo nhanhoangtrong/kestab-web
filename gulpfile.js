@@ -24,15 +24,15 @@ function logPluginError(pluginName) {
 }
 
 function createCopyTask(src, dest) {
-    const func = () => {
+    const copyTask = () => {
         return gulp
             .src(src)
             .pipe(gulp.dest(dest))
             .pipe(browserSync.reload({ stream: true }));
     };
 
-    func.name = `Copy${src}To${dest}`;
-    return func;
+    copyTask.displayName = `Copy "${src}" To "${dest}"`;
+    return copyTask;
 }
 
 const srcDir = {

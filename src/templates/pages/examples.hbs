@@ -5,7 +5,13 @@ Examples page
 {{/content}}
 
 {{#content "body"}}
-<div class="container mx-auto">{{{breadcrumbs "Examples"}}}</div>
+<div class="container mx-auto">
+    {{{breadcrumbs "Examples"}}}
+
+    <article class="my-4">
+        {{{marked "readme"}}}
+    </article>
+</div>
 
 <script src="/js/examples-page.js"></script>
 {{/content}}
