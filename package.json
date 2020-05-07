@@ -6,7 +6,9 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production gulp start",
     "dev": "cross-env NODE_ENV=development gulp start",
-    "build": "cross-env NODE_ENV=production gulp build"
+    "build": "cross-env NODE_ENV=production gulp build",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -48,6 +50,8 @@
     "handlebars-layouts": "^3.1.4",
     "marked": "^1.0.0",
     "prettier": "^2.0.5",
-    "tailwindcss": "^1.4.5"
-  }
+    "tailwindcss": "^1.4.5",
+    "snyk": "^1.319.1"
+  },
+  "snyk": true
 }
