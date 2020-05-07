@@ -3,30 +3,122 @@
 
 <head>
 	{{#block "head"}}
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="title" content="{{title}} - {{ appTittle }}">
-		<meta name="description" content="{{description}}">
-		<title>
-			{{#block "title"}}{{/block}} - KESTAB HTML Generator</title>
-		<!-- build:normalizecss -->
-		<link rel="stylesheet" href="/node_modules/normalize.css/normalize.css">
-		<!-- endbuild -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="title" content="{{info.title}}">
+	{{#block "metadata"}}
+	<meta name="description" content="{{info.description}}">
+	<link rel="canonical" href="{{info.url}}">
 
-		<!-- build:css css/combined.css -->
-		<link rel="stylesheet" href="/css/sass/base.css">
+	<!-- OpenGraph tags -->
+	<meta property="og:url" content="{{info.url}}">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="{{info.title}}">
+	<meta property="og:description" content="{{info.description}}">
+	<meta property="og:image" content="{{info.image}}">
+
+	<!-- Twitter Card tags -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:creator" content="{{info.twitterUsername}}">
+	<meta name="twitter:title" content="{{info.title}}">
+	<meta name="twitter:description" content="{{info.description}}">
+	<meta name="twitter:image" content="{{info.image}}">
+	{{/block}}
+	<title>
+		{{#block "title"}}{{/block}} - KESTAB HTML Generator</title>
+	<!-- build:css css/combined.css -->
+	<link rel="stylesheet" href="/css/main.css">
 	{{/block}}
 	<!-- endbuild -->
 </head>
 
-<body>
-	{{#block "body"}}
-	{{/block}}
+<body class="flex flex-col flex-no-wrap">
+	<header class="flex-shrink-0 bg-orange-600">
+		<div class="container mx-auto flex items-center justify-between flex-wrap p-6">
+			<div class="flex items-center flex-shrink-0 text-white mr-6">
+				<svg class="fill-current h-8 w-8 mr-2" width="32px" height="32px" viewBox="0 0 32 32"
+					xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M 13.498047 2 A 0.50005 0.50005 0 0 0 12.998047 2.5 L 12.998047 8.5429688 A 0.50005 0.50005 0 0 0 13.498047 9.0429688 L 13.998047 9.0429688 L 13.998047 11.542969 A 0.50005 0.50005 0 0 0 14.498047 12.042969 L 15.5 12.042969 L 15.5 16.054688 L 12.337891 16.054688 L 12.337891 16.052734 C 11.057962 16.052734 10.005859 17.088681 10.005859 18.363281 L 10.005859 24.607422 L 10.001953 24.607422 L 10.001953 25.107422 C 10.001953 25.969222 10.338937 26.834534 11.001953 27.490234 C 11.752055 28.232134 12.615502 29.093756 13.466797 29.785156 C 14.318091 30.476556 15.126652 31.045022 16 31.044922 C 16.865716 31.045022 17.703936 30.497747 18.576172 29.810547 C 19.439875 29.129947 20.300655 28.272534 20.998047 27.490234 L 21 27.490234 C 21.661723 26.834934 21.998059 25.970275 21.998047 25.109375 L 21.998047 24.609375 L 21.994141 24.609375 L 21.994141 18.365234 C 21.994141 17.090634 20.942071 16.054688 19.662109 16.054688 L 16.5 16.054688 L 16.5 12.042969 L 17.501953 12.042969 A 0.50005 0.50005 0 0 0 18.001953 11.542969 L 18.001953 9.0429688 L 18.501953 9.0429688 A 0.50005 0.50005 0 0 0 19.001953 8.5429688 L 19.001953 2.5 A 0.50005 0.50005 0 0 0 18.501953 2 L 13.498047 2 z M 13.998047 3 L 18.001953 3 L 18.001953 8.0429688 L 13.998047 8.0429688 L 13.998047 3 z M 14.998047 9.0429688 L 17.001953 9.0429688 L 17.001953 11.042969 L 14.998047 11.042969 L 14.998047 9.0429688 z M 12.337891 17.052734 L 15.5 17.052734 L 15.5 19.544922 A 0.50005 0.50005 0 1 0 16.5 19.544922 L 16.5 17.052734 L 19.662109 17.052734 C 20.411176 17.052734 20.994141 17.631481 20.994141 18.363281 L 20.994141 25.117188 C 20.991441 25.717187 20.764377 26.315197 20.294922 26.779297 L 20.285156 26.789062 L 20.273438 26.802734 C 19.604059 27.555734 18.762601 28.392191 17.958984 29.025391 C 17.155368 29.658591 16.355103 30.044922 16 30.044922 C 15.652529 30.044922 14.889301 29.652766 14.097656 29.009766 C 13.306011 28.366766 12.456979 27.522997 11.705078 26.779297 C 11.235586 26.315097 11.00852 25.717288 11.005859 25.117188 L 11.005859 18.363281 C 11.005859 17.631381 11.588791 17.052734 12.337891 17.052734 z " />
+				</svg>
+				<span class="font-semibold text-xl tracking-tight">KESTAB Web Builder</span>
+			</div>
+
+			<div class="block lg:hidden">
+				<button
+					class="flex items-center px-3 py-2 border rounded text-orange-200 border-orange-400 hover:text-white hover:border-white">
+					<svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<title>Menu</title>
+						<path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+					</svg>
+				</button>
+			</div>
+
+			<nav class="-mb-px w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+				<div class="text-sm lg:flex-grow">
+					<a href="/" class="block mt-4 lg:inline-block lg:mt-0 text-orange-200 hover:text-white mr-4">
+						Homepage
+					</a>
+					<a href="/examples.html"
+						class="block mt-4 lg:inline-block lg:mt-0 text-orange-200 hover:text-white mr-4">
+						Examples
+					</a>
+					<a href="/posts" class="block mt-4 lg:inline-block lg:mt-0 text-orange-200 hover:text-white mr-4">
+						Blog
+					</a>
+				</div>
+			</nav>
+		</div>
+	</header>
+
+	<main class="flex-1 w-full py-8">
+		{{#block "body"}}
+		{{/block}}
+	</main>
+
+	<footer class="flex justify-center px-4 text-gray-100 bg-gray-800">
+		<div class="container py-6">
+			<h1 class="text-center text-lg font-bold lg:text-2xl">
+				Join 31,000+ other and never miss <br> out on new tips, tutorials, and more.
+			</h1>
+
+			<div class="flex justify-center mt-6">
+				<div class="bg-white rounded-lg">
+					<div class="flex flex-wrap justify-between md:flex-row">
+						<input type="email" class="m-1 p-2 appearance-none text-gray-700 text-sm focus:outline-none"
+							placeholder="Enter your email">
+						<button
+							class="w-full m-1 p-2 text-sm bg-gray-800 rounded-lg font-semibold uppercase lg:w-auto">subscribe</button>
+					</div>
+				</div>
+			</div>
+
+			<hr class="h-px mt-6 bg-gray-700 border-none">
+
+			<div class="flex flex-col items-center justify-between mt-6 md:flex-row">
+				<div>
+					<a href="#" class="text-xl font-bold">Brand</a>
+				</div>
+				<div class="flex mt-4 md:m-0">
+					<div class="-mx-4">
+						<a href="/about.html" class="px-4 text-sm">About</a>
+						<a href="/examples" class="px-4 text-sm">Examples</a>
+						<a href="/posts" class="px-4 text-sm">Blog</a>
+					</div>
+				</div>
+			</div>
+
+			<p class="text-xs text-gray-200 mt-4">
+				Copyright &copy; by&nbsp;<a class="text-blue-200 hover:text-blue-400" href="https://kendyits.me"
+					rel="noopenner" target="_blank">Kendy Hoang</a>
+			</p>
+		</div>
+	</footer>
 
 	<!-- build:js scripts/combined.js -->
 	{{#block "scripts"}}
-		<script src="/js/main.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/js/main.js" type="text/javascript" charset="utf-8"></script>
 	{{/block}}
 	<!-- endbuild -->
 </body>

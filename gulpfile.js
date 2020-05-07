@@ -2,22 +2,18 @@ const gulp = require('gulp'),
     htmlmin = require('gulp-htmlmin'),
     gutil = require('gulp-util'),
     uglify = require('gulp-uglify'),
-    cssnano = require('gulp-cssnano'),
+    postCss = require('gulp-postcss'),
     imagemin = require('gulp-imagemin'),
-    watch = require('gulp-watch'),
     useref = require('gulp-useref'),
-    stylus = require('gulp-stylus'),
     hb = require('gulp-hb'),
     rename = require('gulp-rename'),
-    sass = require('gulp-sass'),
-    sourcemaps = require('gulp-sourcemaps'),
     htmlReplace = require('gulp-html-replace');
 
 const del = require('del');
 const browserSync = require('browser-sync').create();
 
 function logPluginError(pluginName) {
-    return function(error) {
+    return function (error) {
         // When plugin error occured
         // logging error stack via gutil
         gutil.log(pluginName, error.stack);
@@ -27,81 +23,79 @@ function logPluginError(pluginName) {
     };
 }
 
-const src = {
-    styl: './src/styl/**/*.styl',
-    sass: './src/sass/**/*.scss',
+function createCopyTask(src, dest) {
+    const func = () => {
+        return gulp
+            .src(src)
+            .pipe(gulp.dest(dest))
+            .pipe(browserSync.reload({ stream: true }));
+    };
+
+    func.name = `Copy${src}To${dest}`;
+    return func;
+}
+
+const srcDir = {
     css: './src/css/**/*.css',
     img: './src/img/**/*',
     html: './src/**/*.html',
     hbs: './src/templates/**/*.hbs',
     js: './src/js/**/*.js',
     templatesDir: './src/templates/**/*',
-    templates: './src/templates/pages/{,posts/}*.hbs',
+    pages: './src/templates/pages/**/*.hbs',
     layouts: './src/templates/layouts/*.hbs',
     partials: './src/templates/partials/*.hbs',
     data: './src/templates/data/*.{json,js}',
     helpers: './src/templates/helpers/*.js',
 };
 
-const dest = {
-    styl: './src/css/styl',
-    sass: './src/css/sass',
-    html: './src',
-};
-
-const dist = {
+const distDir = {
     css: './dist/css',
     js: './dist/js',
     html: './dist/',
     img: './dist/img',
 };
 
-function stylusTask() {
+function postCssTask() {
     return gulp
-        .src(src.styl)
-        .pipe(sourcemaps.init())
-        .pipe(stylus().on('error', logPluginError('stylus')))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(dest.styl))
+        .src(srcDir.css)
         .pipe(
-            browserSync.stream({
-                once: true,
-            })
-        );
-}
-
-function sassTask() {
-    return gulp
-        .src(src.sass)
-        .pipe(sourcemaps.init())
-        .pipe(sass().on('error', logPluginError('sass')))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(dest.sass))
+            postCss(
+                [require('tailwindcss'), require('autoprefixer')].concat(
+                    process.env.NODE_ENV === 'production'
+                        ? [require('cssnano')]
+                        : []
+                )
+            ).on('error', logPluginError('postCss'))
+        )
+        .pipe(gulp.dest(distDir.css))
         .pipe(
-            browserSync.stream({
-                once: false, // inject many .css
+            browserSync.reload({
+                stream: true,
             })
         );
 }
 
 function handlebarsTask() {
     var hbsStream = hb()
-        .partials(src.layouts)
-        .partials(src.partials)
+        .partials(srcDir.layouts)
+        .partials(srcDir.partials)
         .helpers(require('handlebars-layouts'))
-        .helpers(src.helpers)
-        .data(src.data)
+        .helpers(srcDir.helpers)
+        .data(srcDir.data)
         .on('error', logPluginError('handlebars'));
 
     return gulp
-        .src(src.templates)
+        .src(srcDir.pages, {
+            base: './src/templates/pages',
+        })
         .pipe(hbsStream)
         .pipe(
-            rename(function(path) {
+            rename(function (path) {
                 path.extname = '.html';
             })
         )
-        .pipe(gulp.dest(dest.html))
+        .pipe(gulp.dest(distDir.html))
         .pipe(
             browserSync.reload({
                 stream: true,
@@ -110,10 +104,9 @@ function handlebarsTask() {
 }
 
 function browserSyncTask() {
-    const baseDir = process.env.NODE_ENV === 'production' ? './dist' : './src';
     browserSync.init({
         server: {
-            baseDir: baseDir,
+            baseDir: './dist',
         },
         serveStatic: [
             {
@@ -127,7 +120,7 @@ function browserSyncTask() {
 function htmlminTask() {
     const replaceTasks = Object.assign({}, require('./cdnmap.json'));
     return gulp
-        .src(src.html)
+        .src(srcDir.html)
         .pipe(htmlReplace(replaceTasks))
         .pipe(useref())
         .pipe(
@@ -135,28 +128,21 @@ function htmlminTask() {
                 collapseWhitespace: true,
             }).on('error', logPluginError('htmlmin'))
         )
-        .pipe(gulp.dest(dist.html));
+        .pipe(gulp.dest(distDir.html));
 }
 
 function uglifyTask() {
     return gulp
-        .src(src.js)
+        .src(srcDir.js)
         .pipe(uglify().on('error', logPluginError('uglify')))
-        .pipe(gulp.dest(dist.js));
-}
-
-function cssnanoTask() {
-    return gulp
-        .src(src.css)
-        .pipe(cssnano().on('error', logPluginError('cssnano')))
-        .pipe(gulp.dest(dist.css));
+        .pipe(gulp.dest(distDir.js));
 }
 
 function imageminTask() {
     return gulp
-        .src(src.img)
+        .src(srcDir.img)
         .pipe(imagemin().on('error', logPluginError('imagemin')))
-        .pipe(gulp.dest(dist.img));
+        .pipe(gulp.dest(distDir.img));
 }
 
 function cleanTask() {
@@ -164,23 +150,39 @@ function cleanTask() {
 }
 
 const watchDevTask = (exports.watch = function watchDevTask() {
-    gulp.watch(src.styl, stylusTask);
-    gulp.watch(src.sass, sassTask);
-    gulp.watch(src.templatesDir, handlebarsTask);
-    gulp.watch(src.js, browserSync.reload);
-    gulp.watch(src.img, browserSync.reload);
+    gulp.watch(srcDir.css, postCssTask);
+    gulp.watch(
+        [
+            srcDir.pages,
+            srcDir.data,
+            srcDir.layouts,
+            srcDir.partials,
+            srcDir.helpers,
+        ],
+        handlebarsTask
+    );
+    gulp.watch(srcDir.js, createCopyTask(srcDir.js, distDir.js));
+    gulp.watch(srcDir.img, createCopyTask(srcDir.img, distDir.img));
 });
 
 const build = (exports.build = gulp.series(
     cleanTask,
-    gulp.parallel(stylusTask, handlebarsTask, sassTask),
-    gulp.parallel(cssnanoTask, uglifyTask, imageminTask),
+    gulp.parallel(handlebarsTask, postCssTask),
+    gulp.parallel(uglifyTask, imageminTask),
     htmlminTask
 ));
 
-const serve = (exports.serve = gulp.series(build, browserSyncTask));
+const serve = (exports.serve = gulp.series(cleanTask, build, browserSyncTask));
 
-exports.start =
-    process.env.NODE_ENV === 'production'
-        ? serve
-        : gulp.parallel(watchDevTask, browserSyncTask);
+const dev = (exports.dev = gulp.series(
+    cleanTask,
+    gulp.parallel(
+        handlebarsTask,
+        postCssTask,
+        createCopyTask(srcDir.js, distDir.js),
+        createCopyTask(srcDir.img, distDir.img)
+    ),
+    gulp.parallel(watchDevTask, browserSyncTask)
+));
+
+exports.start = process.env.NODE_ENV === 'production' ? serve : dev;

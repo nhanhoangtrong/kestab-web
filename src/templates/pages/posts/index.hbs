@@ -1,0 +1,16 @@
+{{#extend "base"}}
+{{#content "title"}}
+Blog posts
+{{/content}}
+
+{{#content "body"}}
+<div class="container mx-auto">
+    {{{breadcrumbs "Blog" "Test" "/test"}}}
+    <h1 class="text-2xl text-gray-900 pb-6 px-6 md:px-12">Post list</h1>
+
+    <div class="flex flex-wrap px-6">
+        {{>post}}
+    </div>
+</div>
+{{/content}}
+{{/extend}}
