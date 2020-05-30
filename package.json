@@ -48,6 +48,6 @@
     "handlebars-layouts": "^3.1.4",
     "marked": "^1.0.0",
     "prettier": "^2.0.5",
-    "tailwindcss": "^1.4.5"
+    "tailwindcss": "^1.4.6"
   }
 }
