@@ -4,23 +4,25 @@ Homepage
 {{/content}}
 
 {{#content "body"}}
-Hello world
-<br />
-{{#ifeq data.number 1}}
-<h1>True</h1>
-{{else}}
-<h2>False</h2>
-{{/ifeq}}
-title: {{data.title}}
-<br /> body: {{data.body}}
-<br /> this is a partial: {{> partone }} this is another partial: {{> parttwo part="two"}} this is a sample image:
-<div class="max-w-sm mx-auto flex p-6 bg-white rounded-lg shadow-xl">
-	<div class="flex-shrink-0">
-		<img class="h-12 w-12" src="/img/sample.png" alt="Sample logo">
-	</div>
-	<div class="ml-6 pt-1">
-		<h4 class="text-xl text-gray-900 leading-tight">Sample text</h4>
-		<p class="text-base text-gray-600 leading-normal">Hello sample!</p>
+<div class="container mx-auto my-2">
+	Hello world
+	<br />
+	{{#ifeq data.number 1}}
+	<h1>True</h1>
+	{{else}}
+	<h2>False</h2>
+	{{/ifeq}}
+	title: {{data.title}}
+	<br /> body: {{data.body}}
+	<br /> this is a partial: {{> partone }} this is another partial: {{> parttwo part="two"}} this is a sample image:
+	<div class="max-w-sm mx-auto flex p-6 bg-white rounded-lg shadow-xl">
+		<div class="flex-shrink-0">
+			<img class="h-12 w-12" src="/img/sample.png" alt="Sample logo">
+		</div>
+		<div class="ml-6 pt-1">
+			<h4 class="text-xl text-gray-900 leading-tight">Sample text</h4>
+			<p class="text-base text-gray-600 leading-normal">Hello sample!</p>
+		</div>
 	</div>
 </div>
 {{/content}}
