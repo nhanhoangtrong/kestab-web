@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/nhanhoangtrong/kestab-web#readme",
   "dependencies": {
-    "autoprefixer": "^9.8.5",
+    "autoprefixer": "^9.8.6",
     "browser-sync": "^2.18.13",
     "cross-env": "^7.0.2",
     "cssnano": "^4.1.10",
