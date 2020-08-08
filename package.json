@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/nhanhoangtrong/kestab-web#readme",
   "dependencies": {
-    "autoprefixer": "^9.8.5",
+    "autoprefixer": "^9.8.6",
     "browser-sync": "^2.26.12",
     "cross-env": "^7.0.2",
     "cssnano": "^4.1.10",
@@ -48,6 +48,6 @@
     "handlebars-layouts": "^3.1.4",
     "marked": "^1.1.1",
     "prettier": "^2.0.5",
-    "tailwindcss": "^1.5.1"
+    "tailwindcss": "^1.6.2"
   }
 }
